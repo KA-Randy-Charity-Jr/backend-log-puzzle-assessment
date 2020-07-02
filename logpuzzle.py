@@ -21,13 +21,25 @@ import urllib.request
 import argparse
 
 
+
+
+
 def read_urls(filename):
     """Returns a list of the puzzle URLs from the given log file,
     extracting the hostname from the filename itself, sorting
     alphabetically in increasing order, and screening out duplicates.
     """
     # +++your code here+++
-    pass
+    path = "http://" + filename.split("_")[1]
+    urls = []
+    fullpath = []
+    with open(filename) as f:
+        content = f.read()
+        urls = re.findall(r'GET (\S*puzzle\S*) HTTP', content)
+    urls = set(urls)
+    for url in urls:
+        fullpath.append(path + url)
+    return sorted(fullpath,key=lambda i:i[-8:])
 
 
 def download_images(img_urls, dest_dir):
@@ -39,7 +51,17 @@ def download_images(img_urls, dest_dir):
     Creates the directory if necessary.
     """
     # +++your code here+++
-    pass
+    if not (os.path.exists(dest_dir)):
+        os.mkdir(dest_dir)
+    with open(os.path.join(dest_dir, 'index.html'), 'w+') as index:
+        index.write('<html>\n<body>\n')
+        for i in range(len(img_urls)):
+            imgname = "img" + str(i)+".jpg"
+            link = os.path.join(dest_dir, imgname)
+            print('Retrieving ' + imgname + '...')
+            urllib.request.urlretrieve(img_urls[i], link)
+            index.write('<img src="' + imgname + '">')
+        index.write('\n</body>\n</html>')
 
 
 def create_parser():
