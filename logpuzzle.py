@@ -21,15 +21,7 @@ import urllib.request
 import argparse
 
 
-def sort_urls(urls):
-    """Returns the urls sorted into
-    increasing order."""
-    # +++your code here+++
-    if re.search(r'-\w+-(\w+).jpg', urls[0]):
-        urls.sort(key=lambda x: re.search(r'-\w+-(\w+).jpg', x).group(1))
-    else:
-        urls.sort()
-    return urls
+
 
 
 def read_urls(filename):
@@ -47,7 +39,7 @@ def read_urls(filename):
     urls = set(urls)
     for url in urls:
         fullpath.append(path + url)
-    return sort_urls(fullpath)
+    return sorted(fullpath,key=lambda i:i[-8:])
 
 
 def download_images(img_urls, dest_dir):
